@@ -1,0 +1,3 @@
+One time password for login to MPW is : {{ otp }}
+
+{{hash_code}}

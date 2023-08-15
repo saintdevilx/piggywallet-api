@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <center><h5>Please wait....</h5></center>
+<script>
+  window.parent.postMessage(`{"status":"{{ callback_data.cf_status }}", "message":"{{ callback_data.cf_message }}"}`, '*');
+</script>
+</body>
+</html>

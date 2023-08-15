@@ -1,0 +1,15 @@
+<form action="{{post_data.url}}" name="payment_form" method="post">
+  <p>Please wait.......</p>
+  <input type="hidden" name="signature" value="{{post_data.signature}}"/>
+  <input type="hidden" name="orderNote" value="{{post_data.orderNote}}" />
+  <input type="hidden" name="orderCurrency" value="{{post_data.orderCurrency}}" />
+  <input type="hidden" name="customerName" value="{{post_data.customerName}}" />
+  <input type="hidden" name="customerEmail" value="{{post_data.customerEmail}}" />
+  <input type="hidden" name="customerPhone" value="{{post_data.customerPhone}}" />
+  <input type="hidden" name="orderAmount" value="{{post_data.orderAmount}}" />
+  <input type ="hidden" name="notifyUrl" value="{{post_data.notifyUrl}}" />
+  <input type ="hidden" name="returnUrl" value="{{post_data.returnUrl}}" />
+  <input type="hidden" name="appId" value="{{post_data.appId}}"/>
+  <input type="hidden" name="orderId" value="{{post_data.orderId}}"/>
+</form>
+<ion-button shape="round" expand="full"> Pay Now</ion-button>

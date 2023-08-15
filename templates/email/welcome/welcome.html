@@ -1,0 +1,42 @@
+{% extends  'email/base.html' %}
+{% block content%}
+    <table class="es-content" cellspacing="0" cellpadding="0" align="center">
+                            <tbody>
+                                <tr>
+                                    <td class="esd-stripe" align="center">
+                                        <table class="es-content-body" width="600" cellspacing="0" cellpadding="0" bgcolor="#ffffff" align="center">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="esd-structure es-p20t es-p20b es-p20r es-p20l" align="left">
+                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="esd-container-frame" width="560" valign="top" align="center">
+                                                                        <table width="100%" cellspacing="0" cellpadding="0">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="esd-block-text es-p20t" align="left">
+                                                                                        <p style="line-height: 200%;">Hi {{ first_name }},</p>
+                                                                                        <p style="line-height: 200%;">Welcome to MyPiggyWallet! Please confirm your email address by clicking the link below.</p>
+                                                                                        <p style="line-height: 200%;">If you have not requested this email address verification, please ignore this message. You should still check us out!</p>
+                                                                                        <p style="line-height: 200%;"><br></p>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td align="left" class="esd-block-button es-p10"><span class="es-button-border" style="border-color: transparent; background: #a657ff; border-bottom-width: 0px; border-radius: 10px;"><a href="{{ confirmation_link }}" class="es-button" target="_blank" style="background: #a657ff; border-color: #a657ff; border-width: 15px 30px; border-radius: 10px;">Confirm email address</a></span></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+{% endblock %}

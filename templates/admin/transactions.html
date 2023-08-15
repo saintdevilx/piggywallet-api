@@ -1,0 +1,101 @@
+{%extends 'admin/admin_base.html'%}
+
+
+{% block content %}
+
+<div class="form">
+    <h4>Transaction Dashboard</h4>
+    <div class="container">
+        <form>
+            <div class="row">
+                <div class="form-group col-4">
+                    <select name="field_name" class="form-control" >
+                        <option value="">Select field</option>
+                        <option {% if field_value == 'order_id' %} selected='true' {% endif %} value="order_id">Order Id</option>
+                        <option {% if field_value == 'user__email' %} selected='true' {% endif %} value="user__email">Email</option>
+                        <option {% if field_value == 'pk' %} selected='true' {% endif %}  value="pk">Transaction Id</option>
+                        <option {% if field_value == 'user__phone_number' %} selected='true' {% endif %}  value="user__phone_number">Phone Number</option>
+                    </select>
+                </div>
+                <div class="form-group col-5">
+                    <input value="{{ field_value }}" name="field_value" class="form-control" type="text" placeholder="Value" />
+                </div>
+                <div class="col-3 form-group">
+                    <button class="btn btn-primary" type="submit"> Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="transaction-list">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">TXN ID</th>
+              <th scope="col">Order Id</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Status</th>
+              <th scope="col">Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.pk }}</td>
+                <td>{{ transaction.order_id }}</td>
+                <td>INR. {{ transaction.amount }}</td>
+                <td><div class="badge badge-pill {% if transaction.get_status_display == 'SUCCESS' %}btn-success{% endif %} {% if transaction.get_status_display == 'FAILED' %}btn-danger{% endif %} ">{{ transaction.get_status_display }}</div></td>
+                <td>{{ transaction.created_at }}</td>
+                <td>
+                    <button {% if transaction.get_status_display == "SUCCESS" %} disabled {% endif %} class="btn btn-secondary" onclick="checkStatus(this, '{{ transaction.pk }}')">Check Status
+                    <div class="progress" hidden>
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                    </div>
+                    </button>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6" align="center">
+                    No transactions found
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+
+<script>
+var $ = jQuery;
+    function checkStatus(src,tid){
+        $(src).attr('disabled', true);
+        $(src).children(1).removeAttr('hidden');
+        $.ajax({
+             url:'{% url "admin_view:transaction_status"%}',
+             method:"POST",
+             data:{'tid':tid},
+             success:function(data){
+                $(`#txn${tid}`).remove();
+                $('body').append(data.html);
+                console.log(`#txn${tid}`);
+                $(`#txn${tid}`).modal('show');
+             },
+             error:function(e){
+                alert('Error', e)
+             },
+             complete:function(){
+                $(src).removeAttr('disabled');
+                $(src).children(1).attr('hidden','');
+             }
+        })
+    }
+    $(document).ready(function(){
+
+
+    })
+</script>
+
+{% endblock %}
+
+

@@ -1,0 +1,143 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block content %}
+<form>
+        <h4>Withdraw Request</h4>
+        <div class="row">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-primary">Status</label>
+              <label class="btn btn-primary active">
+                <select class="form-control" name="status">
+                    <option value="0" {% if status == '0'  %}selected{% endif %}>PENDING</option>
+                    <option value="1"  {% if status == '1'  %}selected{% endif %}>SUCCESS</option>
+                    <option value="2" {% if status == '2'  %}selected{% endif %}>FAILED</option>
+                    <option value="3" {% if status == '3'  %}selected{% endif %}>CANCELLED</option>
+                </select>
+              </label>
+              <label class="btn btn-primary active">
+                  <select class="form-control" name="order">
+                      <option value="-created_at"  {% if status == '-created_at'  %}selected{% endif %}>Latest first</option>
+                      <option value="created_at" {% if status == 'created_at'  %}selected{% endif %}>Oldest first</option>
+                  </select>
+              </label>
+              <label class="btn btn-primary active">
+                <input type="submit" autocomplete="off" class="form-control btn btn-success" value="submit" />
+              </label>
+            </div>
+
+        </div>
+            <div class="transaction-list">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Saving goal</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">User</th>
+                      <th scope="col">Transaction</th>
+                      <th scope="col">Bank Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                {% for withdraw in withdraw_requests.object_list %}
+                <tr>
+                        <td><a href="#">{{ withdraw.pk }}</a> </td>
+                        <td>
+                            <a target="_blank" href="{% url 'admin:saving_goal_savinggoal_change' object_id=withdraw.saving_goal_id %}">{{ withdraw.saving_goal.title }}</a>
+                        </td>
+                        <td>
+                            {{ withdraw.withdraw_amount }}
+                        </td>
+                        <td>
+                            <strong class="badge badge-pill badge-{%if  withdraw.get_status_display == 'SUCCESS'%}success{% else %}{%if  withdraw.get_status_display == 'PENDING' %}warning{% else %}danger{% endif %}{% endif %}">{{ withdraw.get_status_display }}</strong>
+                        </td>
+                        <td>
+                            <a target="_blank" href="{% url 'admin:user_user_change' object_id=withdraw.user_id%}"> {{ withdraw.user.get_full_name }}</a>
+                        </td>
+                        <td>
+                           <a href=""> {{ withdraw.transaction_id }}</a>
+                        </td>
+                        <td>
+                            <div>Name: {{ withdraw.user_bank_account.account_holder_name }}</div>
+                            <div>Acc: {{ withdraw.user_bank_account.account_no }}</div>
+                            <div>IFSC: {{ withdraw.user_bank_account.ifsc_code }}</div>
+                        </td>
+                        <td>
+                            {% if withdraw.get_status_display == 'PENDING' %}
+                            <a class="btn btn-success" target="_blank" onclick="approveWithdraw(this, '{{ withdraw.pk }}')">Approve</a>
+                            <a class="btn btn-danger" target="_blank" onclick="declineWithdraw(this, '{{ withdraw.pk }}')">Decline</a>
+                            {% endif %}
+                        </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" align="center">No withdraw request</td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+
+{% endblock %}
+
+{% block footer %}
+<div class="btn-toolbar">
+    {% if withdraw_requests.has_previous %}
+     <div class="btn-group ml-2 mr-2">
+        <input type="submit" value="{{withdraw_requests.previous_page_number}}" name="page" class="btn btn-primary">
+     </div>
+    {% endif %}
+    <div class="btn-group mr-2">
+        <label  class="btn disabled">{{ withdraw_requests.number }}</label>
+    </div>
+    {% if withdraw_requests.has_next %}
+     <div class="btn-group mr-2">
+        <input type="submit" value="{{withdraw_requests.next_page_number}}" name="page" class="btn btn-primary">
+     </div>
+    {% endif %}
+</div>
+</form>
+<script>
+    $(document).ready(function(){
+    })
+    function approveWithdraw(src, pk){
+        $.ajax({
+            url:`/admin_view/withdraw_request/approve/${pk}/`,
+            data:{pk:pk},
+            method:"POST",
+            success:function(res){
+                if(res.success){
+                 alert('Successfully approved...')
+                 $(src).remove();
+                }
+                else{
+                 alert('Something went wrong.');
+                }
+            },
+            error:function(err){
+                   console.log('request failed', res);
+            }
+        })
+    }
+
+    function declineWithdraw(src, pk){
+        $.ajax({
+            url:`/admin_view/withdraw_request/decline/${pk}/`,
+            data:{pk:pk},
+            method:"POST",
+            success:function(res){
+                if(res.success){
+                 alert('Successfully declined...')
+                 $(src).remove();
+                }
+                else{
+                 alert('Something went wrong.');
+                }
+            },
+            error:function(err){
+                   console.log('request failed', res);
+            }
+        })
+    }
+</script>
+{% endblock %}
